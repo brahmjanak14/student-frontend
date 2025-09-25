@@ -173,7 +173,7 @@ export default function Contact() {
           <div className="max-w-4xl mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-4 lg:gap-8">
               {/* Contact Form */}
-              <div>
+              <div className="w-full max-w-2xl mx-auto lg:max-w-none lg:mx-0">
                 {isSubmitted ? (
                   <Card title="Message Sent!" className="text-center">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
