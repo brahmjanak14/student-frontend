@@ -4,13 +4,27 @@ import { useLocation } from "wouter";
 import Navbar from "../components/Navbar";
 import Card from "../components/Card";
 import Button from "../components/Button";
-import { MapPin, Phone, Mail, Clock, MessageSquare, Send, CheckCircle } from "lucide-react";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  MessageSquare,
+  Send,
+  CheckCircle,
+} from "lucide-react";
 
 interface ContactFormData {
   name: string;
   email: string;
   phone: string;
   subject: string;
+  education: string;
+  educationGrade: string;
+  gradeType: string;
+  hasLanguageTest: string;
+  languageTest: string;
+  ieltsScore: string;
   message: string;
 }
 
@@ -18,7 +32,17 @@ export default function Contact() {
   const [, setLocation] = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactFormData>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm<ContactFormData>();
+
+  const education = watch("education");
+  const hasLanguageTest = watch("hasLanguageTest");
+  const languageTest = watch("languageTest");
 
   const contactInfo = [
     {
@@ -27,17 +51,13 @@ export default function Contact() {
       details: [
         "123 Business District, Sector 12",
         "Gurgaon, Haryana 122001",
-        "India"
-      ]
+        "India",
+      ],
     },
     {
       icon: <Phone className="w-6 h-6 text-primary" />,
       title: "Phone Numbers",
-      details: [
-        "+91 9876543210",
-        "+91 9876543211",
-        "Toll Free: 1800-123-4567"
-      ]
+      details: ["+91 9876543210", "+91 9876543211", "Toll Free: 1800-123-4567"],
     },
     {
       icon: <Mail className="w-6 h-6 text-primary" />,
@@ -45,8 +65,8 @@ export default function Contact() {
       details: [
         "info@prathaminternational.com",
         "support@prathaminternational.com",
-        "admissions@prathaminternational.com"
-      ]
+        "admissions@prathaminternational.com",
+      ],
     },
     {
       icon: <Clock className="w-6 h-6 text-primary" />,
@@ -54,9 +74,9 @@ export default function Contact() {
       details: [
         "Monday - Friday: 9:00 AM - 7:00 PM",
         "Saturday: 9:00 AM - 5:00 PM",
-        "Sunday: Emergency Support Only"
-      ]
-    }
+        "Sunday: Emergency Support Only",
+      ],
+    },
   ];
 
   const offices = [
@@ -64,58 +84,62 @@ export default function Contact() {
       city: "Delhi",
       address: "456 Connaught Place, Central Delhi",
       phone: "+91 11-4567-8900",
-      email: "delhi@prathaminternational.com"
+      email: "delhi@prathaminternational.com",
     },
     {
       city: "Mumbai",
       address: "789 Andheri West, Mumbai",
       phone: "+91 22-9876-5432",
-      email: "mumbai@prathaminternational.com"
+      email: "mumbai@prathaminternational.com",
     },
     {
       city: "Bangalore",
       address: "321 Koramangala, Bangalore",
       phone: "+91 80-1234-5678",
-      email: "bangalore@prathaminternational.com"
+      email: "bangalore@prathaminternational.com",
     },
     {
       city: "Chandigarh",
       address: "654 Sector 17, Chandigarh",
       phone: "+91 172-987-6543",
-      email: "chandigarh@prathaminternational.com"
-    }
+      email: "chandigarh@prathaminternational.com",
+    },
   ];
 
   const faqs = [
     {
       question: "How long does the visa process take?",
-      answer: "The visa processing time typically ranges from 4-12 weeks, depending on the type of application and current processing times."
+      answer:
+        "The visa processing time typically ranges from 4-12 weeks, depending on the type of application and current processing times.",
     },
     {
       question: "What documents do I need for my application?",
-      answer: "Required documents include academic transcripts, language test scores, financial statements, passport, and letters of recommendation."
+      answer:
+        "Required documents include academic transcripts, language test scores, financial statements, passport, and letters of recommendation.",
     },
     {
       question: "Do you provide accommodation assistance?",
-      answer: "Yes, we help students find suitable accommodation including on-campus residences, homestays, and shared apartments."
+      answer:
+        "Yes, we help students find suitable accommodation including on-campus residences, homestays, and shared apartments.",
     },
     {
       question: "What are your consultation fees?",
-      answer: "We offer a free initial consultation. Our service packages start from ₹25,000 and vary based on the services included."
-    }
+      answer:
+        "We offer a free initial consultation. Our service packages start from ₹25,000 and vary based on the services included.",
+    },
   ];
 
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
     console.log("Contact form submitted:", data);
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     setIsSubmitted(true);
     setIsSubmitting(false);
     reset();
-    
+
     // Reset success state after 5 seconds
     setTimeout(() => {
       setIsSubmitted(false);
@@ -125,7 +149,7 @@ export default function Contact() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      
+
       <div className="pt-24 pb-12 overflow-x-hidden">
         {/* Hero Section */}
         <section className="bg-gradient-to-r from-primary/10 to-blue-50 py-8 md:py-16">
@@ -134,8 +158,9 @@ export default function Contact() {
               Get In Touch With Us
             </h1>
             <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto break-words">
-              Have questions about studying in Canada? Our expert team is here to help you every step of the way. 
-              Contact us today for personalized guidance.
+              Have questions about studying in Canada? Our expert team is here
+              to help you every step of the way. Contact us today for
+              personalized guidance.
             </p>
           </div>
         </section>
@@ -148,7 +173,12 @@ export default function Contact() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
               {contactInfo.map((info, index) => (
-                <Card key={index} className="text-center" padding="md" data-testid={`contact-info-${index}`}>
+                <Card
+                  key={index}
+                  className="text-center"
+                  padding="md"
+                  data-testid={`contact-info-${index}`}
+                >
                   <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-4">
                     {info.icon}
                   </div>
@@ -157,7 +187,10 @@ export default function Contact() {
                   </h3>
                   <div className="space-y-1">
                     {info.details.map((detail, idx) => (
-                      <p key={idx} className="text-gray-600 text-sm break-words overflow-wrap-anywhere">
+                      <p
+                        key={idx}
+                        className="text-gray-600 text-sm break-words overflow-wrap-anywhere"
+                      >
                         {detail}
                       </p>
                     ))}
@@ -170,10 +203,10 @@ export default function Contact() {
 
         {/* Contact Form and Map */}
         <section className="py-8 md:py-16 bg-white">
-          <div className="max-w-4xl mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-4 lg:gap-8">
               {/* Contact Form */}
-              <div className="w-full max-w-2xl mx-auto lg:max-w-none lg:mx-0">
+              <div className="w-full max-w-2xl mx-auto lg:max-w-none lg:mx-0 ">
                 {isSubmitted ? (
                   <Card title="Message Sent!" className="text-center">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
@@ -183,7 +216,8 @@ export default function Contact() {
                       Message Sent Successfully!
                     </h4>
                     <p className="text-gray-600">
-                      Thank you for contacting us. We'll get back to you within 24 hours.
+                      Thank you for contacting us. We'll get back to you within
+                      24 hours.
                     </p>
                   </Card>
                 ) : (
@@ -197,35 +231,42 @@ export default function Contact() {
                             </label>
                             <input
                               type="text"
-                              {...register("name", { required: "Name is required" })}
+                              {...register("name", {
+                                required: "Name is required",
+                              })}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                               placeholder="Enter your full name"
                               data-testid="input-name"
                             />
                             {errors.name && (
-                              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+                              <p className="text-red-500 text-sm mt-1">
+                                {errors.name.message}
+                              </p>
                             )}
                           </div>
-                          
+
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Email Address *
                             </label>
                             <input
                               type="email"
-                              {...register("email", { 
+                              {...register("email", {
                                 required: "Email is required",
                                 pattern: {
-                                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                  message: "Invalid email address"
-                                }
+                                  value:
+                                    /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                  message: "Invalid email address",
+                                },
                               })}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                               placeholder="Enter your email"
                               data-testid="input-email"
                             />
                             {errors.email && (
-                              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                              <p className="text-red-500 text-sm mt-1">
+                                {errors.email.message}
+                              </p>
                             )}
                           </div>
                         </div>
@@ -237,51 +278,255 @@ export default function Contact() {
                             </label>
                             <input
                               type="tel"
-                              {...register("phone", { required: "Phone number is required" })}
+                              {...register("phone", {
+                                required: "Phone number is required",
+                              })}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                               placeholder="Enter your phone number"
                               data-testid="input-phone"
                             />
                             {errors.phone && (
-                              <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+                              <p className="text-red-500 text-sm mt-1">
+                                {errors.phone.message}
+                              </p>
                             )}
                           </div>
-                          
+
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Subject *
                             </label>
                             <select
-                              {...register("subject", { required: "Subject is required" })}
+                              {...register("subject", {
+                                required: "Subject is required",
+                              })}
                               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                               data-testid="select-subject"
                             >
                               <option value="">Select a subject</option>
-                              <option value="visa-consultation">Visa Consultation</option>
-                              <option value="university-selection">University Selection</option>
-                              <option value="document-preparation">Document Preparation</option>
-                              <option value="scholarship-guidance">Scholarship Guidance</option>
+                              <option value="visa-consultation">
+                                Visa Consultation
+                              </option>
+                              <option value="university-selection">
+                                University Selection
+                              </option>
+                              <option value="document-preparation">
+                                Document Preparation
+                              </option>
+                              <option value="scholarship-guidance">
+                                Scholarship Guidance
+                              </option>
                               <option value="other">Other</option>
                             </select>
                             {errors.subject && (
-                              <p className="text-red-500 text-sm mt-1">{errors.subject.message}</p>
+                              <p className="text-red-500 text-sm mt-1">
+                                {errors.subject.message}
+                              </p>
                             )}
                           </div>
                         </div>
+
+                        {/* Education Section */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            What is your last education? *
+                          </label>
+                          <select
+                            {...register("education", {
+                              required: "Education is required",
+                            })}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                            data-testid="select-education"
+                          >
+                            <option value="">Select your education</option>
+                            <option value="12th">12th Standard</option>
+                            <option value="bachelor">Bachelor's Degree</option>
+                            <option value="master">Master's Degree</option>
+                          </select>
+                          {errors.education && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors.education.message}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Education Grade Section */}
+                        {education && (
+                          <div className="grid lg:grid-cols-2 gap-4">
+                            {education === "12th" ? (
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  12th Standard Percentage *
+                                </label>
+                                <input
+                                  type="number"
+                                  step="0.01"
+                                  min="0"
+                                  max="100"
+                                  {...register("educationGrade", {
+                                    required: "Percentage is required",
+                                  })}
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                  placeholder="Enter percentage (e.g., 85)"
+                                  data-testid="input-percentage"
+                                />
+                                {errors.educationGrade && (
+                                  <p className="text-red-500 text-sm mt-1">
+                                    {errors.educationGrade.message}
+                                  </p>
+                                )}
+                              </div>
+                            ) : (
+                              <>
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Grade Type *
+                                  </label>
+                                  <select
+                                    {...register("gradeType", {
+                                      required: "Grade type is required",
+                                    })}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                    data-testid="select-grade-type"
+                                  >
+                                    <option value="">Select grade type</option>
+                                    <option value="cgpa">CGPA</option>
+                                    <option value="percentage">Percentage</option>
+                                  </select>
+                                  {errors.gradeType && (
+                                    <p className="text-red-500 text-sm mt-1">
+                                      {errors.gradeType.message}
+                                    </p>
+                                  )}
+                                </div>
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    {watch("gradeType") === "cgpa" ? "CGPA *" : "Percentage *"}
+                                  </label>
+                                  <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    max={watch("gradeType") === "cgpa" ? "10" : "100"}
+                                    {...register("educationGrade", {
+                                      required: `${watch("gradeType") === "cgpa" ? "CGPA" : "Percentage"} is required`,
+                                    })}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                    placeholder={
+                                      watch("gradeType") === "cgpa"
+                                        ? "Enter CGPA (e.g., 8.5)"
+                                        : "Enter percentage (e.g., 85)"
+                                    }
+                                    data-testid="input-grade"
+                                  />
+                                  {errors.educationGrade && (
+                                    <p className="text-red-500 text-sm mt-1">
+                                      {errors.educationGrade.message}
+                                    </p>
+                                  )}
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Language Test Section */}
+                        <div>
+                          <h4 className="text-lg font-semibold text-gray-900 mb-4">
+                            Step 2: Language Test
+                          </h4>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Have you applied for language test? *
+                          </label>
+                          <select
+                            {...register("hasLanguageTest", {
+                              required: "This field is required",
+                            })}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                            data-testid="select-language-test"
+                          >
+                            <option value="">Select option</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                          </select>
+                          {errors.hasLanguageTest && (
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors.hasLanguageTest.message}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Language Test Type */}
+                        {hasLanguageTest === "yes" && (
+                          <div className="grid lg:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Which language test? *
+                              </label>
+                              <select
+                                {...register("languageTest", {
+                                  required: "Language test is required",
+                                })}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                data-testid="select-language-test-type"
+                              >
+                                <option value="">Select language test</option>
+                                <option value="ielts">IELTS</option>
+                                <option value="toefl">TOEFL</option>
+                                <option value="gre">GRE</option>
+                              </select>
+                              {errors.languageTest && (
+                                <p className="text-red-500 text-sm mt-1">
+                                  {errors.languageTest.message}
+                                </p>
+                              )}
+                            </div>
+
+                            {/* IELTS Score */}
+                            {languageTest === "ielts" && (
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  What's your IELTS bands? *
+                                </label>
+                                <input
+                                  type="number"
+                                  step="0.5"
+                                  min="0"
+                                  max="9"
+                                  {...register("ieltsScore", {
+                                    required: "IELTS score is required",
+                                  })}
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                  placeholder="Enter IELTS bands (e.g., 7.5)"
+                                  data-testid="input-ielts-score"
+                                />
+                                {errors.ieltsScore && (
+                                  <p className="text-red-500 text-sm mt-1">
+                                    {errors.ieltsScore.message}
+                                  </p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             Message *
                           </label>
                           <textarea
-                            {...register("message", { required: "Message is required" })}
+                            {...register("message", {
+                              required: "Message is required",
+                            })}
                             rows={6}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
                             placeholder="Tell us about your requirements or questions..."
                             data-testid="textarea-message"
                           />
                           {errors.message && (
-                            <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>
+                            <p className="text-red-500 text-sm mt-1">
+                              {errors.message.message}
+                            </p>
                           )}
                         </div>
 
@@ -313,14 +558,15 @@ export default function Contact() {
               {/* Map and Additional Info */}
               <div className="lg:mt-0 mt-8">
                 <Card title="Visit Our Office">
-                
-                {/* Map Placeholder */}
-                <div className="bg-gray-200 h-48 md:h-64 rounded-lg flex items-center justify-center mb-6 md:mb-8">
-                  <div className="text-center px-4">
-                    <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                    <p className="text-gray-500">Interactive Map</p>
-                    <p className="text-sm text-gray-400 break-words">123 Business District, Gurgaon</p>
-                  </div>
+                  {/* Map Placeholder */}
+                  <div className="bg-gray-200 h-48 md:h-64 rounded-lg flex items-center justify-center mb-6 md:mb-8">
+                    <div className="text-center px-4">
+                      <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                      <p className="text-gray-500">Interactive Map</p>
+                      <p className="text-sm text-gray-400 break-words">
+                        123 Business District, Gurgaon
+                      </p>
+                    </div>
                   </div>
 
                   <div className="mt-6">
@@ -330,24 +576,30 @@ export default function Contact() {
                     <div className="space-y-3">
                       <div className="flex items-center gap-3 min-w-0">
                         <Phone className="w-5 h-5 text-primary flex-shrink-0" />
-                        <span className="text-gray-600 break-words min-w-0">+91 9876543210</span>
+                        <span className="text-gray-600 break-words min-w-0">
+                          +91 9876543210
+                        </span>
                       </div>
                       <div className="flex items-center gap-3 min-w-0">
                         <Mail className="w-5 h-5 text-primary flex-shrink-0" />
-                        <span className="text-gray-600 break-words min-w-0 overflow-wrap-anywhere">info@prathaminternational.com</span>
+                        <span className="text-gray-600 break-words min-w-0 overflow-wrap-anywhere">
+                          info@prathaminternational.com
+                        </span>
                       </div>
                       <div className="flex items-center gap-3 min-w-0">
                         <MessageSquare className="w-5 h-5 text-primary flex-shrink-0" />
-                        <span className="text-gray-600 break-words min-w-0">WhatsApp: +91 9876543210</span>
+                        <span className="text-gray-600 break-words min-w-0">
+                          WhatsApp: +91 9876543210
+                        </span>
                       </div>
                     </div>
-                    
+
                     <div className="mt-6 pt-6 border-t border-gray-200">
                       <Button
                         variant="outline"
                         size="sm"
                         className="w-full"
-                        onClick={() => setLocation('/eligibility')}
+                        onClick={() => setLocation("/eligibility")}
                         data-testid="button-free-assessment"
                       >
                         Get Free Assessment
@@ -401,9 +653,7 @@ export default function Contact() {
                   <h3 className="text-lg font-semibold text-gray-900 mb-3 break-words">
                     {faq.question}
                   </h3>
-                  <p className="text-gray-600 break-words">
-                    {faq.answer}
-                  </p>
+                  <p className="text-gray-600 break-words">{faq.answer}</p>
                 </Card>
               ))}
             </div>
