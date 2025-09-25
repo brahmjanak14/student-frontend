@@ -12,6 +12,8 @@ import EligibilityForm from "@/pages/EligibilityForm";
 import Result from "@/pages/Result";
 import LeadCapture from "@/pages/LeadCapture";
 import DownloadShare from "@/pages/DownloadShare";
+import About from "@/pages/About";
+import Contact from "@/pages/Contact";
 
 // Import component examples for development
 import NavbarExample from "@/components/examples/Navbar";
@@ -33,6 +35,8 @@ function Router() {
       <Route path="/result" component={Result} />
       <Route path="/lead-capture" component={LeadCapture} />
       <Route path="/download-share" component={DownloadShare} />
+      <Route path="/about" component={About} />
+      <Route path="/contact" component={Contact} />
       
       {/* Component Examples for Development */}
       <Route path="/examples/navbar" component={NavbarExample} />
