@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import Card from "../components/Card";
@@ -5,6 +6,33 @@ import Button from "../components/Button";
 import { CheckCircle, Users, Award, Clock, ArrowRight } from "lucide-react";
 
 export default function Landing() {
+  const featuresRef = useRef<HTMLElement>(null);
+  const stepsRef = useRef<HTMLElement>(null);
+  const ctaRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fadeInUp');
+            entry.target.classList.remove('opacity-0', 'translate-y-8');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    const elements = [featuresRef.current, stepsRef.current, ctaRef.current];
+    elements.forEach((el) => {
+      if (el) {
+        el.classList.add('opacity-0', 'translate-y-8', 'transition-all', 'duration-700', 'ease-out');
+        observer.observe(el);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, []);
   const features = [
     {
       icon: <CheckCircle className="w-6 h-6 text-green-600" />,
@@ -54,7 +82,7 @@ export default function Landing() {
       <Hero />
 
       {/* Features Section */}
-      <section className="py-20 bg-white">
+      <section ref={featuresRef} className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-poppins font-bold text-gray-900 mb-4">
@@ -84,7 +112,7 @@ export default function Landing() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 bg-gray-50">
+      <section ref={stepsRef} className="py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-poppins font-bold text-gray-900 mb-4">
@@ -127,7 +155,7 @@ export default function Landing() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary to-red-600 text-white">
+      <section ref={ctaRef} className="py-20 bg-gradient-to-r from-primary to-red-600 text-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-4xl font-poppins font-bold mb-4">
             Ready to Study in Canada?
