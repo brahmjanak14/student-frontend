@@ -23,8 +23,9 @@ export default function Hero({
       <div className="max-w-6xl mx-auto px-4 py-20 text-center">
         <div className="max-w-4xl mx-auto">
           {/* Main Headline */}
-          <h1 className="text-5xl md:text-7xl font-poppins font-bold text-gray-900 mb-6 leading-tight">
-            {headline}
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-poppins font-bold text-gray-900 mb-6 leading-tight">
+            Check Your Canada Study Visa<br />
+            <span className="text-primary">Eligibility Instantly</span>
           </h1>
           
           {/* Subtext */}
