@@ -190,7 +190,7 @@ export default function Contact() {
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <Card title="Send Us a Message">
                       <div className="space-y-6">
-                        <div className="grid md:grid-cols-2 gap-4">
+                        <div className="grid lg:grid-cols-2 gap-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Full Name *
@@ -230,7 +230,7 @@ export default function Contact() {
                           </div>
                         </div>
 
-                        <div className="grid md:grid-cols-2 gap-4">
+                        <div className="grid lg:grid-cols-2 gap-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Phone Number *
