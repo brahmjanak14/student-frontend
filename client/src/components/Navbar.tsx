@@ -19,15 +19,12 @@ export default function Navbar({ className = "" }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 hover-elevate rounded-lg px-2 py-1" data-testid="link-home">
+          <Link href="/" className="flex items-center hover-elevate rounded-lg px-2 py-1" data-testid="link-home">
             <img 
-              src="/attached_assets/pratham-international_1758821006563.png" 
+              src="/src/assets/images/pratham-international.png" 
               alt="Pratham International" 
               className="h-8 w-auto"
             />
-            <span className="font-poppins font-semibold text-primary text-sm hidden md:block">
-              Pratham International
-            </span>
           </Link>
 
           {/* Navigation Links */}
