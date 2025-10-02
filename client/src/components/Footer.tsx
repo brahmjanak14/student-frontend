@@ -2,17 +2,17 @@ import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from "luc
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-white pt-12 pb-8">
+    <footer className="bg-gray-900 text-white pt-12 pb-20 md:pb-8">
       <div className="max-w-6xl mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-8 mb-8">
-          <div>
+          <div className="text-center md:text-left">
             <h3 className="text-xl font-bold mb-4 text-white">Canada Study Visa</h3>
             <p className="text-gray-400 text-sm">
               Your trusted partner for Canada study visa eligibility assessment and guidance.
             </p>
           </div>
 
-          <div>
+          <div className="text-center md:text-left">
             <h4 className="font-semibold mb-4 text-white">Quick Links</h4>
             <ul className="space-y-2 text-sm">
               <li>
@@ -38,22 +38,22 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div className="text-center md:text-left">
             <h4 className="font-semibold mb-4 text-white">Contact Info</h4>
             <ul className="space-y-3 text-sm">
-              <li className="flex items-start gap-2">
+              <li className="flex items-start gap-2 justify-center md:justify-start">
                 <Mail className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
                 <a href="mailto:info@canadastudyvisa.com" className="text-gray-400 hover:text-white transition-colors" data-testid="link-footer-email">
                   info@canadastudyvisa.com
                 </a>
               </li>
-              <li className="flex items-start gap-2">
+              <li className="flex items-start gap-2 justify-center md:justify-start">
                 <Phone className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
                 <a href="tel:+1234567890" className="text-gray-400 hover:text-white transition-colors" data-testid="link-footer-phone">
                   +1 (234) 567-890
                 </a>
               </li>
-              <li className="flex items-start gap-2">
+              <li className="flex items-start gap-2 justify-center md:justify-start">
                 <MapPin className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
                 <span className="text-gray-400" data-testid="text-footer-address">
                   Toronto, Ontario, Canada
@@ -62,9 +62,9 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div className="text-center md:text-left">
             <h4 className="font-semibold mb-4 text-white">Follow Us</h4>
-            <div className="flex gap-3">
+            <div className="flex gap-3 justify-center md:justify-start">
               <a 
                 href="#" 
                 className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition-colors"
