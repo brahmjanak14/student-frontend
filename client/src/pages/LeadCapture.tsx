@@ -117,7 +117,7 @@ export default function LeadCapture() {
                   <input
                     type="text"
                     {...register("name", { required: "Full name is required" })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                     placeholder="Enter your full name"
                     data-testid="input-lead-name"
                   />
@@ -139,7 +139,7 @@ export default function LeadCapture() {
                         message: "Please enter a valid email"
                       }
                     })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                     placeholder="Enter your email address"
                     data-testid="input-lead-email"
                   />
@@ -161,7 +161,7 @@ export default function LeadCapture() {
                         message: "Please enter a valid 10-digit mobile number"
                       }
                     })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                     placeholder="Enter your mobile number"
                     data-testid="input-lead-mobile"
                   />
@@ -177,7 +177,7 @@ export default function LeadCapture() {
                   <input
                     type="text"
                     {...register("city", { required: "City is required" })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                     placeholder="Enter your city"
                     data-testid="input-lead-city"
                   />
@@ -233,7 +233,7 @@ export default function LeadCapture() {
                         message: "Please enter a valid 6-digit OTP"
                       }
                     })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-center text-lg tracking-widest"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors text-center text-lg tracking-widest"
                     placeholder="000000"
                     maxLength={6}
                     data-testid="input-otp"

@@ -204,7 +204,7 @@ export default function EligibilityForm() {
                                 {...register("gradeType", {
                                   required: "Grade type is required",
                                 })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                                 data-testid="select-grade-type"
                               >
                                 <option value="">Select grade type</option>
@@ -233,7 +233,7 @@ export default function EligibilityForm() {
                                 {...register("educationGrade", {
                                   required: `${watch("gradeType") === "cgpa" ? "CGPA" : "Percentage"} is required`,
                                 })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                                 placeholder={
                                   watch("gradeType") === "cgpa"
                                     ? "Enter CGPA (e.g., 8.5)"
@@ -268,7 +268,7 @@ export default function EligibilityForm() {
                         {...register("hasLanguageTest", {
                           required: "This field is required",
                         })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                         data-testid="select-language-test"
                       >
                         <option value="">Select option</option>
@@ -293,7 +293,7 @@ export default function EligibilityForm() {
                             {...register("languageTest", {
                               required: "Language test is required",
                             })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                             data-testid="select-language-test-type"
                           >
                             <option value="">Select language test</option>
@@ -322,7 +322,7 @@ export default function EligibilityForm() {
                               {...register("ieltsScore", {
                                 required: "IELTS score is required",
                               })}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                               placeholder="Enter IELTS bands (e.g., 7.5)"
                               data-testid="input-ielts-score"
                             />
@@ -386,7 +386,7 @@ export default function EligibilityForm() {
                         <input
                           type="number"
                           {...register("work_experience_years")}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                           placeholder="Enter years (e.g., 2)"
                           data-testid="input-work-years"
                         />
@@ -402,7 +402,7 @@ export default function EligibilityForm() {
                           {...register("preferred_intake", {
                             required: "Please select an intake",
                           })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                           data-testid="select-intake"
                         >
                           <option value="">Select Intake</option>
@@ -423,7 +423,7 @@ export default function EligibilityForm() {
                         </label>
                         <select
                           {...register("preferred_province")}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                           data-testid="select-province"
                         >
                           <option value="">Select Province</option>
@@ -445,7 +445,7 @@ export default function EligibilityForm() {
                       </label>
                       <select
                         {...register("financial_capacity")}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                         data-testid="select-financial-capacity"
                       >
                         <option value="">Select Range</option>

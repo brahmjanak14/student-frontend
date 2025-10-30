@@ -224,7 +224,7 @@ export default function Contact() {
                               {...register("name", {
                                 required: "Name is required",
                               })}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                               placeholder="Enter your full name"
                               data-testid="input-name"
                             />
@@ -249,7 +249,7 @@ export default function Contact() {
                                   message: "Invalid email address",
                                 },
                               })}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                               placeholder="Enter your email"
                               data-testid="input-email"
                             />
@@ -271,7 +271,7 @@ export default function Contact() {
                               {...register("phone", {
                                 required: "Phone number is required",
                               })}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                               placeholder="Enter your phone number"
                               data-testid="input-phone"
                             />
@@ -290,7 +290,7 @@ export default function Contact() {
                               {...register("subject", {
                                 required: "Subject is required",
                               })}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors"
                               data-testid="select-subject"
                             >
                               <option value="">Select a subject</option>
@@ -325,7 +325,7 @@ export default function Contact() {
                               required: "Message is required",
                             })}
                             rows={6}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none focus:outline-none focus-visible:outline-none focus:border-primary focus:shadow-none transition-colors resize-none"
                             placeholder="Tell us about your requirements or questions..."
                             data-testid="textarea-message"
                           />
