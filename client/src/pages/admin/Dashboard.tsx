@@ -144,7 +144,7 @@ export default function AdminDashboard() {
                       {submission.email}
                     </td>
                     <td className="py-3 px-4 text-sm text-gray-600">
-                      {submission.country}
+                      {submission.city}
                     </td>
                     <td className="py-3 px-4 text-sm">
                       <span className="font-semibold text-gray-900">
