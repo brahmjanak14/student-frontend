@@ -36,9 +36,7 @@ interface FormData {
 export default function EligibilityForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>({
-    mode: "onSubmit"
-  });
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>();
 
   const education = watch("education");
   const hasLanguageTest = watch("hasLanguageTest");
