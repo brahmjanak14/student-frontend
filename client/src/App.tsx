@@ -10,6 +10,7 @@ import BottomNavigation from "@/components/BottomNavigation";
 // Import main pages
 import Landing from "@/pages/Landing";
 import EligibilityForm from "@/pages/EligibilityForm";
+import CheckEligibility from "@/pages/CheckEligibility";
 import Result from "@/pages/Result";
 import LeadCapture from "@/pages/LeadCapture";
 import DownloadShare from "@/pages/DownloadShare";
@@ -37,6 +38,7 @@ function Router() {
     <Switch>
       {/* Main Application Routes */}
       <Route path="/" component={Landing} />
+      <Route path="/check-eligibility" component={CheckEligibility} />
       <Route path="/eligibility" component={EligibilityForm} />
       <Route path="/result" component={Result} />
       <Route path="/lead-capture" component={LeadCapture} />
