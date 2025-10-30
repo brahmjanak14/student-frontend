@@ -1,5 +1,7 @@
-import { type User, type InsertUser, type Submission, type InsertSubmission } from "@shared/schema";
+import { type User, type InsertUser, type Submission, type InsertSubmission, users, submissions } from "@shared/schema";
 import { randomUUID } from "crypto";
+import { db } from "./db";
+import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -8,7 +10,11 @@ export interface IStorage {
   
   getSubmissions(): Promise<Submission[]>;
   getSubmission(id: string): Promise<Submission | undefined>;
+  getSubmissionByPhone(phone: string): Promise<Submission | undefined>;
   createSubmission(submission: InsertSubmission): Promise<Submission>;
+  updateSubmissionOtp(id: string, otpCode: string): Promise<Submission | undefined>;
+  verifyOtp(id: string, otpCode: string): Promise<boolean>;
+  updateEligibilityScore(id: string, score: number): Promise<Submission | undefined>;
   updateSubmissionStatus(id: string, status: string): Promise<Submission | undefined>;
 }
 
@@ -30,12 +36,9 @@ export class MemStorage implements IStorage {
         fullName: "John Smith",
         email: "john.smith@example.com",
         phone: "+1 234 567 8901",
-        country: "India",
-        education: "Bachelor's Degree",
-        englishTest: "IELTS",
-        testScore: "7.5",
-        workExperience: "3 years",
-        financialCapacity: "$20,000+",
+        city: "Mumbai",
+        otpCode: null,
+        otpVerified: 1,
         eligibilityScore: 85,
         status: "approved",
         submittedAt: new Date("2024-01-15T10:30:00"),
@@ -45,12 +48,9 @@ export class MemStorage implements IStorage {
         fullName: "Sarah Johnson",
         email: "sarah.j@example.com",
         phone: "+1 234 567 8902",
-        country: "Nigeria",
-        education: "Master's Degree",
-        englishTest: "TOEFL",
-        testScore: "95",
-        workExperience: "5 years",
-        financialCapacity: "$30,000+",
+        city: "Lagos",
+        otpCode: null,
+        otpVerified: 1,
         eligibilityScore: 92,
         status: "approved",
         submittedAt: new Date("2024-01-16T14:20:00"),
@@ -60,45 +60,12 @@ export class MemStorage implements IStorage {
         fullName: "Michael Chen",
         email: "m.chen@example.com",
         phone: "+1 234 567 8903",
-        country: "China",
-        education: "Bachelor's Degree",
-        englishTest: "IELTS",
-        testScore: "6.5",
-        workExperience: "2 years",
-        financialCapacity: "$15,000-$20,000",
+        city: "Beijing",
+        otpCode: null,
+        otpVerified: 1,
         eligibilityScore: 70,
         status: "pending",
         submittedAt: new Date("2024-01-17T09:15:00"),
-      },
-      {
-        id: randomUUID(),
-        fullName: "Priya Patel",
-        email: "priya.p@example.com",
-        phone: "+1 234 567 8904",
-        country: "India",
-        education: "Master's Degree",
-        englishTest: "IELTS",
-        testScore: "8.0",
-        workExperience: "4 years",
-        financialCapacity: "$25,000+",
-        eligibilityScore: 88,
-        status: "approved",
-        submittedAt: new Date("2024-01-18T11:45:00"),
-      },
-      {
-        id: randomUUID(),
-        fullName: "David Martinez",
-        email: "d.martinez@example.com",
-        phone: "+1 234 567 8905",
-        country: "Mexico",
-        education: "Bachelor's Degree",
-        englishTest: "TOEFL",
-        testScore: "85",
-        workExperience: "1 year",
-        financialCapacity: "$10,000-$15,000",
-        eligibilityScore: 65,
-        status: "pending",
-        submittedAt: new Date("2024-01-19T16:30:00"),
       },
     ];
 
@@ -134,6 +101,12 @@ export class MemStorage implements IStorage {
     return this.submissions.get(id);
   }
 
+  async getSubmissionByPhone(phone: string): Promise<Submission | undefined> {
+    return Array.from(this.submissions.values()).find(
+      (submission) => submission.phone === phone,
+    );
+  }
+
   async createSubmission(insertSubmission: InsertSubmission): Promise<Submission> {
     const id = randomUUID();
     const submission: Submission = {
@@ -141,17 +114,43 @@ export class MemStorage implements IStorage {
       fullName: insertSubmission.fullName,
       email: insertSubmission.email,
       phone: insertSubmission.phone,
-      country: insertSubmission.country,
-      education: insertSubmission.education,
-      englishTest: insertSubmission.englishTest ?? null,
-      testScore: insertSubmission.testScore ?? null,
-      workExperience: insertSubmission.workExperience ?? null,
-      financialCapacity: insertSubmission.financialCapacity ?? null,
+      city: insertSubmission.city,
+      otpCode: insertSubmission.otpCode ?? null,
+      otpVerified: insertSubmission.otpVerified ?? 0,
       eligibilityScore: insertSubmission.eligibilityScore ?? null,
       status: insertSubmission.status || "pending",
       submittedAt: new Date(),
     };
     this.submissions.set(id, submission);
+    return submission;
+  }
+
+  async updateSubmissionOtp(id: string, otpCode: string): Promise<Submission | undefined> {
+    const submission = this.submissions.get(id);
+    if (submission) {
+      submission.otpCode = otpCode;
+      submission.otpVerified = 0;
+      this.submissions.set(id, submission);
+    }
+    return submission;
+  }
+
+  async verifyOtp(id: string, otpCode: string): Promise<boolean> {
+    const submission = this.submissions.get(id);
+    if (submission && submission.otpCode === otpCode) {
+      submission.otpVerified = 1;
+      this.submissions.set(id, submission);
+      return true;
+    }
+    return false;
+  }
+
+  async updateEligibilityScore(id: string, score: number): Promise<Submission | undefined> {
+    const submission = this.submissions.get(id);
+    if (submission) {
+      submission.eligibilityScore = score;
+      this.submissions.set(id, submission);
+    }
     return submission;
   }
 
@@ -165,4 +164,75 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+class DbStorage implements IStorage {
+  async getUser(id: string): Promise<User | undefined> {
+    const result = await db.select().from(users).where(eq(users.id, id));
+    return result[0];
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const result = await db.select().from(users).where(eq(users.username, username));
+    return result[0];
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const result = await db.insert(users).values(insertUser).returning();
+    return result[0];
+  }
+
+  async getSubmissions(): Promise<Submission[]> {
+    return await db.select().from(submissions).orderBy(desc(submissions.submittedAt));
+  }
+
+  async getSubmission(id: string): Promise<Submission | undefined> {
+    const result = await db.select().from(submissions).where(eq(submissions.id, id));
+    return result[0];
+  }
+
+  async getSubmissionByPhone(phone: string): Promise<Submission | undefined> {
+    const result = await db.select().from(submissions).where(eq(submissions.phone, phone)).orderBy(desc(submissions.submittedAt));
+    return result[0];
+  }
+
+  async createSubmission(insertSubmission: InsertSubmission): Promise<Submission> {
+    const result = await db.insert(submissions).values(insertSubmission).returning();
+    return result[0];
+  }
+
+  async updateSubmissionOtp(id: string, otpCode: string): Promise<Submission | undefined> {
+    const result = await db.update(submissions)
+      .set({ otpCode, otpVerified: 0 })
+      .where(eq(submissions.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async verifyOtp(id: string, otpCode: string): Promise<boolean> {
+    const submission = await this.getSubmission(id);
+    if (submission && submission.otpCode === otpCode) {
+      await db.update(submissions)
+        .set({ otpVerified: 1 })
+        .where(eq(submissions.id, id));
+      return true;
+    }
+    return false;
+  }
+
+  async updateEligibilityScore(id: string, score: number): Promise<Submission | undefined> {
+    const result = await db.update(submissions)
+      .set({ eligibilityScore: score })
+      .where(eq(submissions.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async updateSubmissionStatus(id: string, status: string): Promise<Submission | undefined> {
+    const result = await db.update(submissions)
+      .set({ status })
+      .where(eq(submissions.id, id))
+      .returning();
+    return result[0];
+  }
+}
+
+export const storage = new DbStorage();
