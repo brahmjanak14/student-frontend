@@ -48,6 +48,23 @@ export default function EligibilityForm() {
   const form = useForm<FormData>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
+    defaultValues: {
+      education: "",
+      educationGrade: "",
+      gradeType: "",
+      hasLanguageTest: "",
+      languageTest: "",
+      ieltsScore: "",
+      has_work_experience: "",
+      work_experience_years: "",
+      financial_capacity: "",
+      preferred_intake: "",
+      preferred_province: "",
+      full_name: "",
+      email: "",
+      phone: "",
+      city: "",
+    },
   });
 
   const {
