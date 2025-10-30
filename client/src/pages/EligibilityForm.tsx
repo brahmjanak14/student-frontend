@@ -84,13 +84,46 @@ export default function EligibilityForm() {
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
-    console.log("Form submitted:", data);
+    
+    try {
+      const response = await fetch('/api/submissions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName: data.full_name,
+          email: data.email,
+          phone: data.phone,
+          city: data.city,
+          education: data.education,
+          educationGrade: data.educationGrade,
+          gradeType: data.gradeType,
+          hasLanguageTest: data.hasLanguageTest,
+          languageTest: data.languageTest,
+          ieltsScore: data.ieltsScore,
+          hasWorkExperience: data.has_work_experience,
+          workExperienceYears: data.work_experience_years,
+          financialCapacity: data.financial_capacity,
+          preferredIntake: data.preferred_intake,
+          preferredProvince: data.preferred_province,
+          status: "pending",
+        }),
+      });
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    // Navigate to results page (simulated)
-    window.location.href = "/result";
+      if (response.ok) {
+        const submission = await response.json();
+        window.location.href = `/result?id=${submission.id}`;
+      } else {
+        console.error('Failed to submit form');
+        alert('Failed to submit form. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const nextStep = () => {

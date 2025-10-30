@@ -117,7 +117,7 @@ export default function AdminDashboard() {
                     Email
                   </th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">
-                    Country
+                    City
                   </th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">
                     Score
