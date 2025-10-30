@@ -5,6 +5,8 @@ import Card from "../components/Card";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
 import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 interface FormData {
   // Academic Details
@@ -36,10 +38,12 @@ interface FormData {
 export default function EligibilityForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>({
+  const form = useForm<FormData>({
     mode: "onSubmit",
     reValidateMode: "onSubmit"
   });
+  
+  const { register, handleSubmit, watch, formState: { errors }, control } = form;
 
   const education = watch("education");
   const hasLanguageTest = watch("hasLanguageTest");
@@ -111,8 +115,9 @@ export default function EligibilityForm() {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Card title={getStepTitle()} className="mb-8">
+          <Form {...form}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Card title={getStepTitle()} className="mb-8">
               
               {/* Step 1: Academic Background */}
               {currentStep === 1 && (
@@ -419,77 +424,73 @@ export default function EligibilityForm() {
               {currentStep === 4 && (
                 <div className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Full Name *
-                      </label>
-                      <input
-                        type="text"
-                        {...register("full_name", { required: "This field is required" })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                        placeholder="Enter your full name"
-                        data-testid="input-full-name"
-                      />
-                      {errors.full_name && (
-                        <p className="text-red-500 text-sm mt-1">{errors.full_name.message}</p>
+                    <FormField
+                      control={control}
+                      name="full_name"
+                      rules={{ required: "This field is required" }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Full Name *</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter your full name" data-testid="input-full-name" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
                       )}
-                    </div>
+                    />
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Email Address *
-                      </label>
-                      <input
-                        type="email"
-                        {...register("email", { 
-                          required: "This field is required",
-                          pattern: {
-                            value: /^\S+@\S+$/i,
-                            message: "Please enter a valid email"
-                          }
-                        })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                        placeholder="Enter your email"
-                        data-testid="input-email"
-                      />
-                      {errors.email && (
-                        <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                    <FormField
+                      control={control}
+                      name="email"
+                      rules={{ 
+                        required: "This field is required",
+                        pattern: {
+                          value: /^\S+@\S+$/i,
+                          message: "Please enter a valid email"
+                        }
+                      }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email Address *</FormLabel>
+                          <FormControl>
+                            <Input type="email" placeholder="Enter your email" data-testid="input-email" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
                       )}
-                    </div>
+                    />
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Phone Number *
-                      </label>
-                      <input
-                        type="tel"
-                        {...register("phone", { required: "This field is required" })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                        placeholder="Enter your phone number"
-                        data-testid="input-phone"
-                      />
-                      {errors.phone && (
-                        <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+                    <FormField
+                      control={control}
+                      name="phone"
+                      rules={{ required: "This field is required" }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone Number *</FormLabel>
+                          <FormControl>
+                            <Input type="tel" placeholder="Enter your phone number" data-testid="input-phone" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
                       )}
-                    </div>
+                    />
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        City *
-                      </label>
-                      <input
-                        type="text"
-                        {...register("city", { required: "This field is required" })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                        placeholder="Enter your city"
-                        data-testid="input-city"
-                      />
-                      {errors.city && (
-                        <p className="text-red-500 text-sm mt-1">{errors.city.message}</p>
+                    <FormField
+                      control={control}
+                      name="city"
+                      rules={{ required: "This field is required" }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>City *</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter your city" data-testid="input-city" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
                       )}
-                    </div>
+                    />
                   </div>
                 </div>
               )}
@@ -532,6 +533,7 @@ export default function EligibilityForm() {
               )}
             </div>
           </form>
+          </Form>
         </div>
       </div>
       <Footer />
