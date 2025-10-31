@@ -1,4 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useLocation } from "wouter";
 import AdminLayout from "@/components/AdminLayout";
 import Card from "@/components/Card";
 import Button from "@/components/Button";
@@ -9,7 +11,20 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import UserPDFDocument from "@/components/UserPDFDocument";
 
 export default function AdminUsers() {
+  const [, setLocation] = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("adminToken") || localStorage.getItem("adminToken");
+    const isAuthenticated = 
+      sessionStorage.getItem("isAdminAuthenticated") === "true" || 
+      localStorage.getItem("isAdminAuthenticated") === "true";
+    
+    if (!token || !isAuthenticated) {
+      setLocation("/admin/login");
+    }
+  }, [setLocation]);
+
   const { data: submissions, isLoading } = useQuery<Submission[]>({
     queryKey: ["/api/submissions"],
   });
@@ -18,7 +33,7 @@ export default function AdminUsers() {
     (submission) =>
       submission.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       submission.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      submission.country.toLowerCase().includes(searchTerm.toLowerCase())
+      submission.city.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (isLoading) {
@@ -94,7 +109,7 @@ export default function AdminUsers() {
                     Phone
                   </th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">
-                    Country
+                    City
                   </th>
                   <th className="text-left py-3 px-4 text-sm font-semibold text-gray-700">
                     Education
@@ -136,19 +151,19 @@ export default function AdminUsers() {
                       {submission.phone}
                     </td>
                     <td className="py-3 px-4 text-sm text-gray-600">
-                      {submission.country}
+                      {submission.city}
                     </td>
                     <td className="py-3 px-4 text-sm text-gray-600">
                       {submission.education}
                     </td>
                     <td className="py-3 px-4 text-sm text-gray-600">
-                      {submission.englishTest || "N/A"}
+                      {submission.languageTest || "N/A"}
                     </td>
                     <td className="py-3 px-4 text-sm text-gray-600">
-                      {submission.testScore || "N/A"}
+                      {submission.ieltsScore || "N/A"}
                     </td>
                     <td className="py-3 px-4 text-sm text-gray-600">
-                      {submission.workExperience || "N/A"}
+                      {submission.workExperienceYears || "N/A"}
                     </td>
                     <td className="py-3 px-4 text-sm">
                       <span className="font-semibold text-gray-900">

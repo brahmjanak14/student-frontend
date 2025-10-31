@@ -79,12 +79,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => {
-                    window.location.href = "/";
+                    sessionStorage.removeItem("adminToken");
+                    sessionStorage.removeItem("isAdminAuthenticated");
+                    localStorage.removeItem("adminToken");
+                    localStorage.removeItem("isAdminAuthenticated");
+                    window.location.href = "/admin/login";
                   }}
                   data-testid="button-admin-logout"
                 >
                   <LogOut className="w-5 h-5" />
-                  <span className="font-medium">Exit Admin</span>
+                  <span className="font-medium">Logout</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>

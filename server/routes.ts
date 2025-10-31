@@ -1,14 +1,53 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertSubmissionSchema } from "@shared/schema";
 import { z } from "zod";
 import React from "react";
 import { Document, Page, Text, View, StyleSheet, pdf } from "@react-pdf/renderer";
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
+
+const JWT_SECRET = process.env.JWT_SECRET || (() => {
+  console.warn("⚠️  WARNING: JWT_SECRET not set. Generating random secret. This will invalidate tokens on restart.");
+  return crypto.randomBytes(64).toString('hex');
+})();
+
+interface AuthRequest extends Request {
+  user?: {
+    id: string;
+    username: string;
+    role: string;
+  };
+}
+
+function authenticateToken(req: AuthRequest, res: Response, next: NextFunction) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ error: "Access token required" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; username: string; role: string };
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return res.status(403).json({ error: "Invalid or expired token" });
+  }
+}
+
+function requireAdmin(req: AuthRequest, res: Response, next: NextFunction) {
+  if (req.user?.role !== "admin") {
+    return res.status(403).json({ error: "Admin access required" });
+  }
+  next();
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Get all submissions
-  app.get("/api/submissions", async (req, res) => {
+  // Get all submissions (admin only)
+  app.get("/api/submissions", authenticateToken, requireAdmin, async (req, res) => {
     try {
       const submissions = await storage.getSubmissions();
       res.json(submissions);
@@ -17,8 +56,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get single submission
-  app.get("/api/submissions/:id", async (req, res) => {
+  // Get single submission (admin only)
+  app.get("/api/submissions/:id", authenticateToken, requireAdmin, async (req, res) => {
     try {
       const submission = await storage.getSubmission(req.params.id);
       if (!submission) {
@@ -51,8 +90,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Update submission status
-  app.patch("/api/submissions/:id/status", async (req, res) => {
+  // Update submission status (admin only)
+  app.patch("/api/submissions/:id/status", authenticateToken, requireAdmin, async (req, res) => {
     try {
       const { status } = req.body;
       if (!status) {
@@ -285,9 +324,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { username, password } = req.body;
       
       if (username === "admin" && password === "admin123") {
+        const token = jwt.sign(
+          { 
+            id: "admin-id",
+            username: "admin",
+            role: "admin"
+          },
+          JWT_SECRET,
+          { expiresIn: "24h" }
+        );
+        
         res.json({ 
           success: true,
-          token: "dummy-jwt-token-" + Date.now(),
+          token: token,
           message: "Login successful"
         });
       } else {

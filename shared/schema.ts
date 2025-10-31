@@ -7,6 +7,7 @@ export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  role: text("role").notNull().default("user"),
 });
 
 export const submissions = pgTable("submissions", {
@@ -36,6 +37,7 @@ export const submissions = pgTable("submissions", {
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
+  role: true,
 });
 
 export const insertSubmissionSchema = createInsertSchema(submissions).omit({
