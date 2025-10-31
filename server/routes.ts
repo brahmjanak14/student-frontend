@@ -35,9 +35,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertSubmissionSchema.parse(req.body);
       const submission = await storage.createSubmission(validatedData);
+      
+      if (!submission) {
+        return res.status(500).json({ error: "Failed to create submission" });
+      }
+      
       res.status(201).json(submission);
     } catch (error) {
-      res.status(400).json({ error: "Invalid submission data" });
+      console.error("Error creating submission:", error);
+      // Return 400 for validation errors (Zod parse errors), 500 for database errors
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid submission data" });
+      }
+      return res.status(500).json({ error: "Internal server error" });
     }
   });
 
@@ -86,6 +96,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         status: "pending",
       });
       
+      if (!submission) {
+        return res.status(500).json({ error: "Failed to create submission" });
+      }
+      
       // Store OTP in submission
       await storage.updateSubmissionOtp(submission.id, otp);
       
@@ -105,7 +119,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Error submitting contact:", error);
-      res.status(400).json({ error: "Failed to submit contact information" });
+      // Return 400 for validation errors, 500 for database errors
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid contact information" });
+      }
+      return res.status(500).json({ error: "Internal server error" });
     }
   });
 
@@ -130,7 +148,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const score = Math.floor(70 + Math.random() * 26);
       
       // Update submission with score
-      await storage.updateEligibilityScore(submissionId, score);
+      const updated = await storage.updateEligibilityScore(submissionId, score);
+      
+      if (!updated) {
+        return res.status(500).json({ error: "Failed to update eligibility score" });
+      }
       
       const message = score >= 80
         ? "You have a strong profile for Canada study visa. Consider improving your writing score to increase chances further."
@@ -143,7 +165,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Error verifying OTP:", error);
-      res.status(400).json({ error: "Failed to verify OTP" });
+      // Return 400 for validation errors, 500 for database errors
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid OTP format" });
+      }
+      return res.status(500).json({ error: "Internal server error" });
     }
   });
 

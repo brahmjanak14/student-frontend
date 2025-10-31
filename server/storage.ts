@@ -220,7 +220,14 @@ class DbStorage implements IStorage {
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const result = await db.insert(users).values(insertUser).returning();
+    // NOTE: Using same workaround as createSubmission - see comment there
+    const id = randomUUID();
+    const userData = {
+      ...insertUser,
+      id,
+    };
+    await db.insert(users).values(userData);
+    const result = await db.select().from(users).where(eq(users.id, id));
     return result[0];
   }
 
@@ -239,15 +246,28 @@ class DbStorage implements IStorage {
   }
 
   async createSubmission(insertSubmission: InsertSubmission): Promise<Submission> {
-    const result = await db.insert(submissions).values(insertSubmission).returning();
+    // NOTE: The neon-http driver doesn't support .returning() properly (returns empty array).
+    // Workaround: Generate UUID before insert, then query the inserted record.
+    // This is safe for single-row inserts and avoids race conditions in this context.
+    const id = randomUUID();
+    const submissionData = {
+      ...insertSubmission,
+      id,
+      submittedAt: new Date(),
+    };
+    
+    await db.insert(submissions).values(submissionData);
+    
+    // Query the inserted record to return it
+    const result = await db.select().from(submissions).where(eq(submissions.id, id));
     return result[0];
   }
 
   async updateSubmissionOtp(id: string, otpCode: string): Promise<Submission | undefined> {
-    const result = await db.update(submissions)
+    await db.update(submissions)
       .set({ otpCode, otpVerified: 0 })
-      .where(eq(submissions.id, id))
-      .returning();
+      .where(eq(submissions.id, id));
+    const result = await db.select().from(submissions).where(eq(submissions.id, id));
     return result[0];
   }
 
@@ -263,18 +283,18 @@ class DbStorage implements IStorage {
   }
 
   async updateEligibilityScore(id: string, score: number): Promise<Submission | undefined> {
-    const result = await db.update(submissions)
+    await db.update(submissions)
       .set({ eligibilityScore: score })
-      .where(eq(submissions.id, id))
-      .returning();
+      .where(eq(submissions.id, id));
+    const result = await db.select().from(submissions).where(eq(submissions.id, id));
     return result[0];
   }
 
   async updateSubmissionStatus(id: string, status: string): Promise<Submission | undefined> {
-    const result = await db.update(submissions)
+    await db.update(submissions)
       .set({ status })
-      .where(eq(submissions.id, id))
-      .returning();
+      .where(eq(submissions.id, id));
+    const result = await db.select().from(submissions).where(eq(submissions.id, id));
     return result[0];
   }
 }
