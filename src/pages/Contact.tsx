@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import Navbar from "../components/Navbar";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
+import { apiRequest } from "@/lib/queryClient";
 import {
   MapPin,
   Phone,
@@ -25,7 +27,6 @@ interface ContactFormData {
 
 export default function Contact() {
   const [, setLocation] = useLocation();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const {
     register,
@@ -33,6 +34,19 @@ export default function Contact() {
     reset,
     formState: { errors },
   } = useForm<ContactFormData>();
+
+  const contactMutation = useMutation({
+    mutationFn: async (data: ContactFormData) => {
+      return await apiRequest("POST", "/api/contact-messages", data);
+    },
+    onSuccess: () => {
+      setIsSubmitted(true);
+      reset();
+      setTimeout(() => {
+        setIsSubmitted(false);
+      }, 5000);
+    },
+  });
 
   const contactInfo = [
     {
@@ -120,31 +134,18 @@ export default function Contact() {
   ];
 
   const onSubmit = async (data: ContactFormData) => {
-    setIsSubmitting(true);
-    console.log("Contact form submitted:", data);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    setIsSubmitted(true);
-    setIsSubmitting(false);
-    reset();
-
-    // Reset success state after 5 seconds
-    setTimeout(() => {
-      setIsSubmitted(false);
-    }, 5000);
+    contactMutation.mutate(data);
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
 
-      <div className="pt-24 pb-12 overflow-x-hidden">
+      <div className="pb-12 overflow-x-hidden">
         {/* Hero Section */}
         <section className="bg-gradient-to-r from-primary/10 to-blue-50 py-8 md:py-16">
           <div className="max-w-4xl mx-auto px-4 text-center overflow-x-hidden">
-            <h1 className="text-3xl md:text-5xl font-poppins font-bold text-gray-900 mb-4 md:mb-6 break-words">
+            <h1 className="text-3xl md:text-5xl pt-20 font-poppins font-bold text-gray-900 mb-4 md:mb-6 break-words">
               Get In Touch With Us
             </h1>
             <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto break-words">
@@ -339,11 +340,11 @@ export default function Contact() {
                         <Button
                           type="submit"
                           size="lg"
-                          disabled={isSubmitting}
+                          disabled={contactMutation.isPending}
                           className="w-full"
                           data-testid="button-submit-contact"
                         >
-                          {isSubmitting ? (
+                          {contactMutation.isPending ? (
                             <>
                               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                               Sending Message...
