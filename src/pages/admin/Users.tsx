@@ -6,20 +6,22 @@ import Card from "@/components/Card";
 import Button from "@/components/Button";
 import { Download, Search } from "lucide-react";
 import { useState } from "react";
-import type { Submission } from "@shared/schema";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import UserPDFDocument from "@/components/UserPDFDocument";
+import type { Submission } from "@/type/submission";
 
 export default function AdminUsers() {
   const [, setLocation] = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    const token = sessionStorage.getItem("adminToken") || localStorage.getItem("adminToken");
-    const isAuthenticated = 
-      sessionStorage.getItem("isAdminAuthenticated") === "true" || 
+    const token =
+      sessionStorage.getItem("adminToken") ||
+      localStorage.getItem("adminToken");
+    const isAuthenticated =
+      sessionStorage.getItem("isAdminAuthenticated") === "true" ||
       localStorage.getItem("isAdminAuthenticated") === "true";
-    
+
     if (!token || !isAuthenticated) {
       setLocation("/admin/login");
     }
@@ -50,7 +52,10 @@ export default function AdminUsers() {
     <AdminLayout>
       <div>
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2" data-testid="text-users-title">
+          <h1
+            className="text-3xl font-bold text-gray-900 mb-2"
+            data-testid="text-users-title"
+          >
             User Details
           </h1>
           <p className="text-gray-600">View and export user submissions</p>
@@ -73,7 +78,9 @@ export default function AdminUsers() {
             {filteredSubmissions && filteredSubmissions.length > 0 && (
               <PDFDownloadLink
                 document={<UserPDFDocument submissions={filteredSubmissions} />}
-                fileName={`user-submissions-${new Date().toISOString().split("T")[0]}.pdf`}
+                fileName={`user-submissions-${
+                  new Date().toISOString().split("T")[0]
+                }.pdf`}
                 className="w-full md:w-auto"
               >
                 {({ loading }) => (
