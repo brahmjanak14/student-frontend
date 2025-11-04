@@ -42,15 +42,18 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
-    port: 5173,
-    open: true,
-    proxy: {
-      "/api": {
-        target: "https://welcome-python-api-closest.trycloudflare.com",
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ""), // optional
+  port: 5173,
+  open: true,
+  proxy: {
+    "/api": {
+      target: "https://welcome-python-api-closest.trycloudflare.com",
+      changeOrigin: true,
+      secure: false,
+      rewrite: (path) => path.replace(/^\/api/, ""),
+      configure: (proxy, options) => {
+        console.log("Proxy is configured", proxy, options);
       },
     },
   },
+}
 });
