@@ -46,7 +46,7 @@ export default defineConfig({
   open: true,
   proxy: {
     "/api": {
-      target: "https://welcome-python-api-closest.trycloudflare.com",
+      target: "https://student-backend-a1rs.onrender.com",
       changeOrigin: true,
       secure: false,
       rewrite: (path) => path.replace(/^\/api/, ""),
